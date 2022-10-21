@@ -13,9 +13,9 @@ void addUserToFile()
     int valids = 0;
     FILE * userFile;
     stUser userAux;
-    int idUser = totalUsers();
+    int idUser = totalUsers(); ///funcion que trae cantidad de usuarios cargados en el archivo y autoinrementa 1
     int iterator = 0;
-    int userValidation = 0;
+    int nameValidation = 0;
 
     char passAux[11]; ///auxiliar de contrasenia
     char passAux1[11];    ///auxiliar de verificacion de contraseña
@@ -40,14 +40,14 @@ void addUserToFile()
         fflush(stdin);
         gets(userAux.fullName);
         // VALIDO SI EL NOMBRE DE userAux YA EXISTE
-        userValidation = userValidation(USERSFILEPATH,userAux,userAux.idUser);
-        while (userValidation == 0)
+        nameValidation = nameValidation(userAux.fullName);
+        while (nameValidation == 0)
         {
             printf("El nombre ya existe\n");
             printf("Ingrese otro\n");
             fflush(stdin);
             gets(userAux.fullName);
-            userValidation = userValidation(userAux,userAux.idUser);//VALIDO NUEVAMENTE EL NOMBRE
+            nameValidation = nameValidation(userAux.fullName);//VALIDO NUEVAMENTE EL NOMBRE
         }
 
         do
@@ -115,34 +115,27 @@ void addUserToFile()
 }
 
 
-
-
-USERSFILEPATH
 //-----------------------------------------------------
 //A.1)FUNCION ADICIONAL QUE VALIDA SI EL USER EXISTE
 //-----------------------------------------------------
 
 
-int userValidation(USERSFILEPATH,stUser toCheck);
+int nameValidation(char toCheck[])
 {
     FILE * userFile;
     int flag = -1;
-    node2User * aux;
-    int i=0;
-    fileUser=fopen(USERSFILEPATH,"rb");
+    node2User * auxList;
+    int i = 0;
+    fileUser = fopen(USERSFILEPATH,"rb");
     if (userFile)
     {
-        CargafileUsersEstructura(USERSFILEPATH,Aux,validos);
-        while ((flag!=0)&&(i<validos))
+        auxList = loadUsersFromFile(auxList);
+        while ((flag!=0) && auxList);
         {
-            flag=strcmp(Aux[i].nombreuserAux,userAux.nombreuserAux);
-            i++;
+            flag = strcmp(auxList->value.fullName, toCheck);
+            auxList = auxList->next;
         }
         fclose(fileUser);
-    }
-    if (fileUser==NULL)
-    {
-        flag=-1;
     }
     return flag;
 }
@@ -152,40 +145,14 @@ int userValidation(USERSFILEPATH,stUser toCheck);
 //FUNCION QUE MUESTRA 1 userAux
 
 
-void mostrarunuserAux(stuserAux userAux[],int pos)
+void showAnUser(stUser toShow)
 {
-    int pass[11];
-    puts("-------------------------------------------------------------------\n");
-    printf("userAux NRO/ID %d\n",userAux[pos].IduserAux);
-    printf("Nombre de userAux: %s\n",userAux[pos].nombreuserAux);
-    //  pasajeMatriztoArreglo(pass,userAux[pos].pass);
-    //  printf("PASS: %s\n",pass);
-    printf("Anio Nacimiento: %i\n",userAux[pos].birthYear);
-    printf("Genero: ");
-    if (userAux[pos].genero=='f')
-    {
-        printf("Femenino\n");
-    }
-    else
-    {
-        printf("Masculino\n");
-    }
-    printf("country de origen: %s\n",userAux[pos].country);
-    printf("Cantidad de Peliculas vistas: %d\n",userAux[pos].canVistas);
-    if (userAux[pos].eliminado==0)
-    {
-        printf("Estado: ACTIVO\n");
-    }
-    else
-    {
-        printf("Estado: INACTIVO\n");
-    }
-    puts("-------------------------------------------------------------------\n");
+    showUser(toShow);
 }
 
 
 //-----------------------------------------------------
-//B)FUNCION QUE MUESTRA LISTA DE userAuxS  // FALTA LA ENCRIPTACION SOLAMENTE
+//B)FUNCION QUE MUESTRA LISTA DE USUARIOS
 //-----------------------------------------------------
 
 
@@ -199,7 +166,7 @@ void mostraruserAux(USERSFILEPATH)
     if ((fileUser)!=NULL)
     {
         printf("Apertura del fileUser exitosa!\n");
-        CargafileUsersEstructura(USERSFILEPATH,userAux,validos);
+        loadUsersFromFile(USERSFILEPATH,userAux,validos);
         while (i<validos)
         {
             mostrarunuserAux(userAux,i);

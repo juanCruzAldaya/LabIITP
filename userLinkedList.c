@@ -167,8 +167,6 @@ node2User * deleteFirst (node2User * userList)
 
 void showUserNode(node2User * toShow)
 {
-
-    int pass[11];
     puts("-------------------------------------------------------------------\n");
     printf("ID USUARIO: %d\n",toShow->value.idUser);
     printf("NOMBRE COMPLETO: %s\n"toShow->value.fullName);
