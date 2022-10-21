@@ -2,34 +2,47 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
+	<File name="userLinkedList.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="384" topLine="30" />
-		</Cursor>
-	</File>
-	<File name="usuarios.c" open="1" top="1" tabpos="9" split="0" active="1" splitpos="0" zoom_1="4" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4462" topLine="126" />
+			<Cursor1 position="590" topLine="7" />
 		</Cursor>
 	</File>
 	<File name="ADLUsers.c" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="3" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="114" topLine="93" />
+			<Cursor1 position="114" topLine="89" />
 		</Cursor>
 	</File>
-	<File name="linkedList.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="3" zoom_2="0">
+	<File name="userLib.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="656" topLine="7" />
+			<Cursor1 position="2140" topLine="41" />
 		</Cursor>
 	</File>
-	<File name="usuarios.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="3" zoom_2="0">
+	<File name="userLib.c" open="1" top="1" tabpos="4" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1305" topLine="32" />
+			<Cursor1 position="3537" topLine="76" />
+		</Cursor>
+		<Folding>
+			<Collapse line="566" />
+			<Collapse line="585" />
+			<Collapse line="602" />
+			<Collapse line="619" />
+			<Collapse line="627" />
+			<Collapse line="632" />
+			<Collapse line="639" />
+			<Collapse line="654" />
+			<Collapse line="667" />
+			<Collapse line="695" />
+			<Collapse line="709" />
+		</Folding>
+	</File>
+	<File name="userLinkedList.c" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="3" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4045" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="linkedList.c" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="3" zoom_2="0">
+	<File name="main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="809" topLine="0" />
+			<Cursor1 position="934" topLine="62" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

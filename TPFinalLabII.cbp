@@ -34,17 +34,17 @@
 		<Unit filename="ADLUsers.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="linkedList.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="linkedList.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="usuarios.c">
+		<Unit filename="userLib.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="usuarios.h" />
+		<Unit filename="userLib.h" />
+		<Unit filename="userLinkedList.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="userLinkedList.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -7,14 +7,14 @@
 //-----------------------------------------------------
 
 
-void addUserToFile(char patchUser[])
+void addUserToFile()
 {
 
     int valids = 0;
     FILE * userFile;
     stUser userAux;
-    int idUser = CantidadValida(patchUser);
-    int cont = 0;
+    int idUser = totalUsers();
+    int iterator = 0;
     int userValidation = 0;
 
     char passAux[11]; ///auxiliar de contrasenia
@@ -26,7 +26,7 @@ void addUserToFile(char patchUser[])
 
 
 
-    userFile = fopen(patchUser, "ab");
+    userFile = fopen(USERSFILEPATH, "ab");
     if (!userFile)
     {
         printf("Error en crear el fileUser / ruta invalida \n");
@@ -36,18 +36,18 @@ void addUserToFile(char patchUser[])
         userAux.idUser = cont++; //AUTOINCREMENTABLE
 
         //CARGA DE 1 userAux POR TECLADO
-        printf("Ingrese el nombre comnpleto del userAux (maximo 30 caracteres)\n");
+        printf("Ingrese el nombre comnpleto del USER (maximo 30 caracteres)\n");
         fflush(stdin);
         gets(userAux.fullName);
         // VALIDO SI EL NOMBRE DE userAux YA EXISTE
-        userValidation = userValidation(patchUser,userAux,userAux.idUser);
+        userValidation = userValidation(USERSFILEPATH,userAux,userAux.idUser);
         while (userValidation == 0)
         {
-            printf("El nombre de userAux ya existe!\n");
-            printf("Ingrese otro nombre de userAux!\n");
+            printf("El nombre ya existe\n");
+            printf("Ingrese otro\n");
             fflush(stdin);
             gets(userAux.fullName);
-            userValidation = userValidation(patchUser,userAux,userAux.idUser);//VALIDO NUEVAMENTE EL NOMBRE
+            userValidation = userValidation(userAux,userAux.idUser);//VALIDO NUEVAMENTE EL NOMBRE
         }
 
         do
@@ -59,7 +59,7 @@ void addUserToFile(char patchUser[])
             gets(passAux);
             getch();
             gotoxy(30, 22);
-            printf("Ingrese una vez mas su contrasenia\n");
+            printf("Una vez mas por favor :) \n");
             gotoxy(30, 23);
             fflush(stdin);
             gets(passAux1);
@@ -102,12 +102,11 @@ void addUserToFile(char patchUser[])
 
         userAux.songsPlayed = 0;
 
-        while (i<30)
+        while (iterator<30)
         {
-            userAux.totalSongsPlayed[i]=-1;
-            i++;
+            userAux.songsPlayed[iterator] = -1;
+            iterator++;
         }
-
 
         fwrite(&userAux,sizeof(stUser),1,fileUser);
         printf("Se ha registrado correctamente el usuario\n");
@@ -118,22 +117,22 @@ void addUserToFile(char patchUser[])
 
 
 
-
+USERSFILEPATH
 //-----------------------------------------------------
 //A.1)FUNCION ADICIONAL QUE VALIDA SI EL USER EXISTE
 //-----------------------------------------------------
 
 
-int userValidation(char userFile[],stUser toCheck);
+int userValidation(USERSFILEPATH,stUser toCheck);
 {
     FILE * userFile;
     int flag = -1;
-    stUser Aux[validos];
+    node2User * aux;
     int i=0;
-    fileUser=fopen(PatchUser,"rb");
-    if ((fileUser)!=NULL)
+    fileUser=fopen(USERSFILEPATH,"rb");
+    if (userFile)
     {
-        CargafileUsersEstructura(PatchUser,Aux,validos);
+        CargafileUsersEstructura(USERSFILEPATH,Aux,validos);
         while ((flag!=0)&&(i<validos))
         {
             flag=strcmp(Aux[i].nombreuserAux,userAux.nombreuserAux);
@@ -190,17 +189,17 @@ void mostrarunuserAux(stuserAux userAux[],int pos)
 //-----------------------------------------------------
 
 
-void mostraruserAux(char PatchUser[])
+void mostraruserAux(USERSFILEPATH)
 {
     FILE *fileUser;
-    int validos=CantidadValida(PatchUser);
+    int validos=CantidadValida(USERSFILEPATH);
     stuserAux userAux[validos];
     int i=0;
-    fileUser=fopen(PatchUser,"rb");
+    fileUser=fopen(USERSFILEPATH,"rb");
     if ((fileUser)!=NULL)
     {
         printf("Apertura del fileUser exitosa!\n");
-        CargafileUsersEstructura(PatchUser,userAux,validos);
+        CargafileUsersEstructura(USERSFILEPATH,userAux,validos);
         while (i<validos)
         {
             mostrarunuserAux(userAux,i);
@@ -221,7 +220,7 @@ void mostraruserAux(char PatchUser[])
 //-----------------------------------------------------
 
 
-void BajauserAux(char PatchUser[],stuserAux userAux[],int validos,int pos)
+void BajauserAux(USERSFILEPATH,stuserAux userAux[],int validos,int pos)
 {
     char respuesta='y';
     system("pause");
@@ -244,14 +243,14 @@ void BajauserAux(char PatchUser[],stuserAux userAux[],int validos,int pos)
     {
         userAux[pos].eliminado=1;
         mostrarunuserAux(userAux,pos);
-        ActualizarfileUser(PatchUser,userAux,validos);
+        ActualizarfileUser(USERSFILEPATH,userAux,validos);
         printf("userAux Inactivo!\n");
     }
     if (respuesta=='n')
     {
         userAux[pos].eliminado=0;
         mostrarunuserAux(userAux,pos);
-        ActualizarfileUser(PatchUser,userAux,validos);
+        ActualizarfileUser(USERSFILEPATH,userAux,validos);
         printf("No se dio de baja el userAux!\n");
     }
 
@@ -263,23 +262,27 @@ void BajauserAux(char PatchUser[],stuserAux userAux[],int validos,int pos)
 //--------------------------------------------------
 //D.1)FUNCION ADICIONAL PASAR LOS userAuxS GUARDADOS DEL fileUser A UNA ESTRUCTURA
 //----------------------------------------------------------------------------
-void CargafileUsersEstructura(char PatchUser[],stuserAux userAux[],int validos)
+node2User * loadUsersFromFile(node2User * userList)
 {
     FILE *fileUser;
-    int pos=0;
-    fileUser=fopen(PatchUser,"rb");
-    if ((fileUser)!=NULL)
+    stUser aux;
+    fileUser=fopen(USERSFILEPATH,"rb");
+
+    if (fileUser)
     {
-        while ((fread(&userAux[pos],sizeof(stuserAux),1,fileUser)>0)&&(pos<validos))
+        node2User * seg = userList;
+        while ((fread(&aux,sizeof(stUser),1,fileUser)>0) && (seg))
         {
-            pos++;
+            seg = seg->next;
         }
         fclose(fileUser);
     }
-    if ((fileUser)==NULL)
+    else
     {
         printf("El fileUser no existe / error de lectura!!\n");
     }
+
+    return userList;
 }
 //-----------------------------------
 //D.2)FUNCION QUE BUSCAR userAux POR ID
@@ -347,7 +350,7 @@ int totalUsers (char userFile[])
     int cantidad=0;
     FILE *fileUser;
     stuserAux userAuxAux;
-    fileUser=fopen(PatchUser,"rb");
+    fileUser=fopen(USERSFILEPATH,"rb");
     if ((fileUser)!=NULL)//EN CASO DE DAR OK EN LA LECTURA DEVUELVE LA CANTIDAD EXACTA DE userAuxS EN EL fileUser
     {
         while (fread(&userAuxAux,sizeof(stuserAux),1,fileUser)>0)
@@ -365,11 +368,11 @@ int totalUsers (char userFile[])
 //-***************************************************************************************
 //FUNCION DE ACTUALIZACION DE userAuxS
 //-------------------------------------------
-void ActualizarfileUser(char PatchUser[],stuserAux userAux[],int validos)
+void ActualizarfileUser(USERSFILEPATH,stuserAux userAux[],int validos)
 {
     int i=0;
     FILE *fileUser;
-    fileUser=fopen(PatchUser,"wb");
+    fileUser=fopen(USERSFILEPATH,"wb");
     if (fileUser!=NULL)
     {
         while(i<validos)
@@ -560,16 +563,16 @@ void mostrarIDpelisauserAux(stuserAux userAux[],int pos)
 
 ///MATRICES
 
-void mostrar_matriz (int fila, int columna, int matrix[fila][columna])
+void showMatrix (int row, int column, int matrix[row][column])
 {
     int i;
     int u;
     int aux;
-    for (i=0; i<fila; i++)
+
+    for (i=0; i<row; i++)
     {
-        for (u=0; u<columna; u++)
+        for (u=0; u<column; u++)
         {
-            aux=matrix[i][u];
             printf("[%d] ", matrix[i][u]);
 
         }
@@ -579,131 +582,148 @@ void mostrar_matriz (int fila, int columna, int matrix[fila][columna])
 
 }
 
-void multiplicar_matrices (int dos, int cinco,int matriz_multiplo1[dos][dos], int matriz_multiplo2 [dos][cinco], int matriz_resultado[dos][cinco])
+void multiplyMatrix (int two, int five,int firstMultiple[two][two], int secondMultiple [two][five], int result[two][five])
 {
 
-    int i=0;
+    int i = 0;
     int u;
-    int q=1;
+    int q = 1;
+
     for (u=0; u<cinco; u++)
     {
-        matriz_resultado[i][u]=(matriz_multiplo1[i][i]*matriz_multiplo2[i][u])+(matriz_multiplo1[i][q]*matriz_multiplo2[q][u]);
+        result[i][u]=(firstMultiple[i][i]*secondMultiple[i][u])+(firstMultiple[i][q]*secondMultiple[q][u]);
 
-        matriz_resultado[q][u]=(matriz_multiplo1[q][i]*matriz_multiplo2[i][u])+(matriz_multiplo1[q][q]*matriz_multiplo2[q][u]);
+        result[q][u]=(firstMultiple[q][i]*secondMultiple[i][u])+(firstMultiple[q][q]*secondMultiple[q][u]);
     }
 
 }
 
 
-void pasar_pswd_matriz (int dos, int cinco, char contrasenia[],  int matriz_contrasenia[dos][cinco])
+void createMatrixPass (int two, int five, char pass[],  int matrixPass[two][five]);
 {
-    int j=0;
-    int i;
-    int u;
+    int iterator= 0;
+    int j;
+    int k;
 
 
-    for (i=0; i<2; i++)
+    for (j=0; j<2; j++)
     {
-        for (u=0; u<5; u++)
+        for (k=0; k<5; k++)
         {
-            matriz_contrasenia[i][u]=(int)contrasenia[j];
-
-
-            j++;
-
+            matrixPass[j]k]=(int)pass[iterator];
+            iterator++;
         }
     }
-
 }
 
-int calcular_determinante (int fila, int columna, int matrix[fila][columna])
+int computeDeterminant (int row, int column, int matrix[row][column])
 {
-    int determinante=0;
-    determinante =((matrix[0][0]* matrix[1][1]) - (matrix[1][0]*matrix[0][1]));
+    int determinant = 0;
+    determinant = ((matrix[0][0]* matrix[1][1]) - (matrix[1][0]*matrix[0][1]));
 
-    return determinante;
-
+    return determinant;
 }
 
-void encriptar_matriz (int dos, int cinco,int matriz_encriptadora[dos][dos], int matriz_contrasenia[dos][cinco], int matriz_encriptada[dos][cinco])
+void encryptMatrix (int two, int five,int keyPass[two][two], int decryptedMatrix[two][five], int encryptedMatrix[two][five])
 {
-    multiplicar_matrices(2, 5, matriz_encriptadora, matriz_contrasenia, matriz_encriptada);
+    multiplicar_matrices(2, 5, keyPass, matriz_contrasenia, encryptedMatrix);
 }
 
-void desencriptar_matriz (int dos, int cinco,int matriz_encriptadora[dos][dos], int matriz_encriptada [dos][cinco], int matriz_desencriptada[dos][cinco])
+void decryptMatrix (int two, int five,int keyPass[two][two], int matrixPass [two][five], int decryptedMatrix[two][five])
 {
-    invertir_matriz(2, 2, matriz_encriptadora);
+    invertir_matriz(2, 2, keyPass);
 
-    multiplicar_matrices(2, 5, matriz_encriptadora, matriz_encriptada, matriz_desencriptada);
+    multiplicar_matrices(2, 5, keyPass, encryptedMatrix, decryptedMatrix);
 }
 
-void crear_matriz_encriptadora (int dos,int matriz_encriptadora[dos][dos])
+void createKeyPass (int two,int keyPass[two][two])
 {
     srand(time(NULL));
-
     do
     {
         int aux = rand()%100;
 
-        matriz_encriptadora[0][0] = aux;
-        matriz_encriptadora[0][1] = aux-1;
-        matriz_encriptadora[1][0] = aux+1;
-        matriz_encriptadora[1][1] = aux;
+        keyPass[0][0] = aux;
+        keyPass[0][1] = aux-1;
+        keyPass[1][0] = aux+1;
+        keyPass[1][1] = aux;
     }
-    while (calcular_determinante(2, 2, matriz_encriptadora)==0);
+    while (computeDeterminant(2, 2, keyPass) == 0);
 }
 
-void invertir_matriz (int dos, int dos,int matriz_encriptadora [dos][dos])
+void invertMatrix() (int two,int keyPass[two][two])
 {
-    int determinante=calcular_determinante(2, 2, matriz_encriptadora);
-    int m00=matriz_encriptadora[0][0];
-    int m01=matriz_encriptadora[0][1];
+    int determinant = computeDeterminant(two, two, keyPass);
+    int p00 = keyPass[0][0];
+    int p01 = keyPass[0][1];
 
-    matriz_encriptadora[0][0]=(matriz_encriptadora[1][1])/determinante;
-    matriz_encriptadora[0][1]=-1*(m01)/determinante;
-    matriz_encriptadora[1][0]=-1*(matriz_encriptadora[1][0])/determinante;
-    matriz_encriptadora[1][1]=(m00)/determinante;
+    keyPass[0][0] = (keyPass[1][1])/determinant;
+    keyPass[0][1] = -1*(p01)/determinant;
+    keyPass[1][0] = -1*(keyPass[1][0])/determinant;
+    keyPass[1][1] = (p00)/determinant;
 
 }
 
-int calcular_compatibilidad (int dos, int cinco, int matriz_encriptada[dos][cinco], int matriz_encriptadora [dos][dos], char contrasenia_ingreasda[])
+int int checkCompatibility (int two, int five, int matrixPass[two][five], int keyPass[two][two], char toCheckPass[])
 {
-    int i;
-    int u;
-    int j=0;
-    int flag=0;
-    int matriz_pswd_ingresada [2][5];
-    int matriz_desencriptada[2][5];
-    pasar_pswd_matriz(2, 5, contrasenia_ingreasda, matriz_pswd_ingresada);
+    int j;
+    int k;
+    int iterator = 0;
+    int flag = 0;
+    int toCheckMatrix [2][5];
+    int decryptedMatrix[2][5];
+    createMatrixPass(2, 5, toCheckPass, toCheckMatrix);
     ///crea la matriz de la contrasenia ingresada
-    desencriptar_matriz(2, 5, matriz_encriptadora, matriz_encriptada, matriz_desencriptada);
+    decryptMatrix(2, 5, keyPass, matrixPass, decryptedMatrix);
     ///desencripta la matriz de la contrasenia del userAux
-    for (i=0; i<dos; i++)
+    for (j=0; j<two; j++)
     {
-        for (u=0; u<cinco; u++)
+        for (k=0; k<five; k++)
         {
-            if (matriz_desencriptada[i][u]==matriz_pswd_ingresada[i][u])
-                j++;
+            if (decryptedMatrix[j][u] == toCheckMatrix[j][u])
+                iterator++;
         }
     }
-    if (j==10)
+    if (iterator == 10) //es decir que coincidieron todos los chars
     {
-        flag=1;
+        flag = 1; ///flag 1 ==
     }
     return flag;
 }
 
-void cpyMatr (int filas, int columnas, int destino[filas][columnas], int origen [filas][columnas])
+void copyMatrix (int rows, int columns, int copy[rows][columns], int original [rows][columns])
 
 {
-    int i, u;
-    for (i=0; i<filas; i++)
+    int j, k;
+    for (j=0; j<rows; j++)
     {
-        for (u=0; u<columnas; u++)
+        for (k=0; k<columns; k++)
         {
-            destino[i][u]=origen[i][u];
+            copy[j][k]=original[j][k];
         }
 
     }
+}
+
+
+stWord showPassword (stUser toShow)
+{
+    int j;
+    int k;
+    int iterator = 0;
+    stWord pass;
+    int decryptedMatrix[2][5];
+
+    decryptMatrix(2, 5, toShow.keyPass, toShow.matrixPass, decryptedMatrix);
+
+    for (j=0; j<2; j++)
+    {
+        for (k=0; k<5; k++)
+        {
+            pass.word[iterator]=(char)decryptedMatrix[j][k];
+            iterator++;
+        }
+    }
+    return pass;
 }
 

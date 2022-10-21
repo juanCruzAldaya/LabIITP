@@ -1,8 +1,11 @@
 #ifndef USUARIOS_H_INCLUDED
 #define USUARIOS_H_INCLUDED
+#define USERSFILEPATH "UsersFile.bin"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "userLinkedList.h"
+
 
 //*****************************************************
 //-----------------------------------------------------
@@ -26,41 +29,45 @@ typedef struct
 typedef struct
 {
     stUser value;
-    struct node2Player * next;
-    struct node2Player * prev;
-}node2Player;  ///al momento de pasar el archivo a la colección, vuelca los usuarios en notwo de lista doblemente enlazada
+    struct node2User* next;
+    struct node2User * prev;
+}node2User;  ///al momento de pasar el archivo a la colección, vuelca los usuarios en notwo de lista doblemente enlazada
 
-
+typedef struct
+{
+    char word[11]; ///struct que permite en una funcion retornar una palabra
+}stWord;
 
 
 //-#################################################
 //-                PARTE USUARIOS
 //-#################################################
-void addUserToFile(char userFile[]);
-void showUser(char userFile[]);
-int userValidation(char userFile[],stUsuario user,int valids);
+void addUserToFile();
+void showUser();
+int userValidation(,stUsuario user,int valids);
 int searchUserByName(node2Player * userList,char name[]);
-int totalUsers(char userFile[]);
+int totalUsers();
 int searchUserById(node2Player * userList, int idUser);
-void moveFileToColetion(char userFile[],node2Player * userList);
-void updateFile(char userFile[],node2Player * userList);
-void deleteUser(char userFile[],node2Player * userList,int idUser);
+node2User * loadUsersFromFile(node2User * userList);
+void updateFile(node2Player * userList);
+void deleteUser(node2Player * userList,int idUser);
 void updateUser(node2Player,int subopciones);
+stWord showPassword (stUser toShow);
 
 ///MATRICES
 void showMatrix (int row, int column, int matrix[row][column]);
 ///muestra por pantalla cualquier matriz
-void createMatrixPass (int two, int five, char paswd[],  int matrixPass[two][five]);
+void createMatrixPass (int two, int five, char pass[],  int matrixPass[two][five]);
 ///convierte en matriz de enteros el array de caracteres (contraseña)
 int computeDeterminant (int row, int column, int matrix[row][column]);
 ///calcula el determinante para validar la inversion del archivo
-void encryptMatrix (int two, int five,int keyPass[two][two], int [two][five], int matrixPass[two][five]);
+void encryptMatrix (int two, int five,int keyPass[two][two], int decryptedMatrix[two][five], int encryptedMatrix[two][five]);
 ///multiplica la matriz contrasenia por la matriz testigo de cada usuario
 void createKeyPass (int two, int keyPass[two][two]);
 ///con una semilla, crea una matriz testigo random inversible
 void invertMatrix (int two, int five,int keyPass[two][two]);
 ///realiza operacion para invertir matriz
-void decryptMatrix (int two, int five,int keyPass[two][two], int matrixPass [two][five], int matriz_desencriptada[two][five]);
+void decryptMatrix (int two, int five,int keyPass[two][two], int matrixPass [two][five], int decryptedMatrix[two][five]);
 ///con la matriz testigo y la matriz encriptada, calcula la inversa y desencripta la matriz contrasenia de cada usuario
 void multiplyMatrix (int two, int five,int firstMultiple[two][two], int secondMultiple [two][five], int result[two][five]);
 ///realiza la operacion de multiplicar matrices entre una de 2x2 y una de 2x5 (el resultado es una de 2x5)
