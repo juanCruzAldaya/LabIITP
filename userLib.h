@@ -43,8 +43,8 @@ typedef struct
 //-                PARTE USUARIOS
 //-#################################################
 void addUserToFile();
-void showUser();
-int userValidation(,stUsuario user,int valids);
+void showUserList();
+int nameValidation(char toCheck[]);
 int searchUserByName(node2Player * userList,char name[]);
 int totalUsers();
 int searchUserById(node2Player * userList, int idUser);

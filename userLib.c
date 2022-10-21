@@ -116,7 +116,7 @@ void addUserToFile()
 
 
 //-----------------------------------------------------
-//A.1)FUNCION ADICIONAL QUE VALIDA SI EL USER EXISTE
+//A.1)FUNCION QUE VALIDA SI EL NOMBRE DEL USUARIO YA ESTA EN USO
 //-----------------------------------------------------
 
 
@@ -140,54 +140,31 @@ int nameValidation(char toCheck[])
     return flag;
 }
 
-
-//-----------------------------------------------------
-//FUNCION QUE MUESTRA 1 userAux
-
-
-void showAnUser(stUser toShow)
-{
-    showUser(toShow);
-}
-
-
 //-----------------------------------------------------
 //B)FUNCION QUE MUESTRA LISTA DE USUARIOS
 //-----------------------------------------------------
 
 
-void mostraruserAux(USERSFILEPATH)
+void showUserList()
 {
-    FILE *fileUser;
-    int validos=CantidadValida(USERSFILEPATH);
-    stuserAux userAux[validos];
-    int i=0;
-    fileUser=fopen(USERSFILEPATH,"rb");
-    if ((fileUser)!=NULL)
+    node2User * auxList = NULL;
+    auxList = loadUsersFromFile(auxList);
+    if (auxList)
     {
-        printf("Apertura del fileUser exitosa!\n");
-        loadUsersFromFile(USERSFILEPATH,userAux,validos);
-        while (i<validos)
-        {
-            mostrarunuserAux(userAux,i);
-            i++;
-        }
-        fclose(fileUser);
+        showList();
     }
-    if (fileUser==NULL)
+    else
     {
-        printf("Error no existe el fileUser\n");
+        printf("La lista está vacía \n");
     }
 }
 
-
-//EN DESARROLLO.... ENCRIPTACION
 //-----------------------------------------------------
-//C)FUNCION BAJA DE userAuxS (INACTIVIDAD) REGISTRADOS EN EL fileUser //EN DESARROLLO.....
+//C)FUNCION BAJA DE userAuxS (INACTIVIDAD) REGISTRADOS EN EL fileUser
 //-----------------------------------------------------
 
 
-void BajauserAux(USERSFILEPATH,stuserAux userAux[],int validos,int pos)
+void BajauserAux(node2User * userList, int idUser)
 {
     char respuesta='y';
     system("pause");

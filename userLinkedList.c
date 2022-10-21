@@ -28,7 +28,7 @@ node2User* addFirst(node2User* userList, node2User* newOne)
 }
 
 
-void showUserList(node2User * toShow) ///recursiva
+void showList(node2User * toShow) ///recursiva
 {
     if (toShow)
     {
@@ -165,7 +165,7 @@ node2User * deleteFirst (node2User * userList)
 }
 
 
-void showUserNode(node2User * toShow)
+void showNode(node2User * toShow)
 {
     puts("-------------------------------------------------------------------\n");
     printf("ID USUARIO: %d\n",toShow->value.idUser);

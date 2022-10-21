@@ -29,8 +29,8 @@ typedef struct
 }node2User; ///LISTA ENLAZADA DE USUARIOS
 
 
-void showUserNode(node2User * toShow);
-void showUserList(node2User* toShow);
+void showNode(node2User * toShow);
+void showList(node2User* toShow);
 node2User* startDoubleList ();
 node2User* createDoubleNode (stUser value);
 node2User* addFirst (node2User* doubleList, node2User* newNode);
