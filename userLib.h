@@ -7,38 +7,6 @@
 #include "userLinkedList.h"
 
 
-//*****************************************************
-//-----------------------------------------------------
-//ESTRUCTURAS DE USUARIOS
-//-----------------------------------------------------
-typedef struct
-{
-    int idUser;
-    char fullName[30];
-    int keyPass[2][2]; ///matriz testigo / encriptadora / unica de c/user
-    int matrixPass[2][5]; ///matriz que ingresa el usuario char convertido y almacenado en matriz de 2x2
-    int birthYear;
-    char gender;
-    char country[20];
-    int songsPlayed[30]; ///IDs de canciones reproducidas por el user
-    int totalSongsPlayed; ///valitwo de songsPlayed
-    int off; ///flag 0 = activo. 1 = off
-    int admin; ///flag 0 = user random. 1 = user admin
-}stUser;
-
-typedef struct
-{
-    stUser value;
-    struct node2User* next;
-    struct node2User * prev;
-}node2User;  ///al momento de pasar el archivo a la colección, vuelca los usuarios en notwo de lista doblemente enlazada
-
-typedef struct
-{
-    char word[11]; ///struct que permite en una funcion retornar una palabra
-}stWord;
-
-
 //-#################################################
 //-                PARTE USUARIOS
 //-#################################################

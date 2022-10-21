@@ -164,7 +164,7 @@ void showUserList()
 //-----------------------------------------------------
 
 
-void BajauserAux(node2User * userList, int idUser)
+void deleteUser(node2User * userList, int idUser)
 {
     char respuesta='y';
     system("pause");
