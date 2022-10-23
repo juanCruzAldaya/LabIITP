@@ -2,52 +2,9 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="ADLUsers.c" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="3" zoom_2="0">
+	<File name="userLib.c" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="1" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="98" topLine="45" />
-		</Cursor>
-	</File>
-	<File name="userLib.c" open="1" top="1" tabpos="3" split="0" active="1" splitpos="0" zoom_1="4" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3907" topLine="0" />
-		</Cursor>
-		<Folding>
-			<Collapse line="10" />
-			<Collapse line="123" />
-			<Collapse line="134" />
-			<Collapse line="184" />
-			<Collapse line="299" />
-			<Collapse line="386" />
-			<Collapse line="401" />
-			<Collapse line="419" />
-			<Collapse line="438" />
-			<Collapse line="455" />
-			<Collapse line="472" />
-			<Collapse line="480" />
-		</Folding>
-	</File>
-	<File name="userLinkedList.c" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="3" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3883" topLine="9" />
-		</Cursor>
-		<Folding>
-			<Collapse line="66" />
-			<Collapse line="101" />
-		</Folding>
-	</File>
-	<File name="userLib.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="4" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1425" topLine="25" />
-		</Cursor>
-	</File>
-	<File name="main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="934" topLine="62" />
-		</Cursor>
-	</File>
-	<File name="userLinkedList.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="4" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="482" topLine="0" />
+			<Cursor1 position="13492" topLine="351" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

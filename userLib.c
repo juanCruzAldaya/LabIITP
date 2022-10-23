@@ -148,6 +148,49 @@ int deleteUser(int idUser)  /// Si el userAux fue elimiinado con exito devuelve 
     return flag;
 }
 
+<<<<<<< HEAD
+=======
+//-----------------------------------------------------
+//C)FUNCION BAJA DE userAuxS (INACTIVIDAD) REGISTRADOS EN EL fileUser
+//-----------------------------------------------------
+
+
+void deleteUser(node2User * userList, int idUser)
+{
+    char respuesta='y';
+    system("pause");
+    system("cls");
+    printf("Nombre del userAux %s:\n",userAux[pos].nombreuserAux);
+    printf("Esta seguro que quiere eliminar el userAux ID: %d ? Y/N \n",userAux[pos].IduserAux);
+    fflush(stdin);
+    gets(&respuesta);
+    while ((respuesta!='y')&&(respuesta!='n'))
+    {
+        system("cls");
+        printf("Opcion incorrecta!!\n");
+        printf("Por favor reingrese la opcion!\n");
+        printf("Nombre del userAux %s:\n",userAux[pos].nombreuserAux);
+        printf("Esta seguro que quiere eliminar el userAux ID: %d ? Y/N \n",userAux[pos].IduserAux);
+        fflush(stdin);
+        gets(&respuesta);
+    }
+    if (respuesta=='y')
+    {
+        userAux[pos].eliminado=1;
+        mostrarunuserAux(userAux,pos);
+        ActualizarfileUser(USERSFILEPATH,userAux,validos);
+        printf("userAux Inactivo!\n");
+    }
+    if (respuesta=='n')
+    {
+        userAux[pos].eliminado=0;
+        mostrarunuserAux(userAux,pos);
+        ActualizarfileUser(USERSFILEPATH,userAux,validos);
+        printf("No se dio de baja el userAux!\n");
+    }
+
+}
+>>>>>>> 844ac3901b9c0b05aae615d91c018ea561c70790
 
 
 //--------------------------------------------------
