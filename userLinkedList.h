@@ -11,7 +11,7 @@ typedef struct
     char name[30]; //name and lastName
     int pass[2][5]; // la pswd es una matriz que se encripta y desencripta con un key generado para c/ user.
     int birthYear;
-    char gender; // (? podríamos evitar esto. qué sentido tiene en un reproductor de musica? ninguno.
+    char gender; //
     char country[20];
     int songPlays[30]; //cantidad de canciones reproducidas
     int off; // indica 1 o 0 si el cliente fue eliminado ->1  / 0 no
@@ -29,11 +29,11 @@ typedef struct
 }node2User; ///LISTA ENLAZADA DE USUARIOS
 
 
-void showNode(node2User * toShow);
-void showList(node2User* toShow);
-node2User* startDoubleList ();
-node2User* createDoubleNode (stUser value);
-node2User* addFirst (node2User* doubleList, node2User* newNode);
+void showUserNode(node2User * toShow);
+void showUserList(node2User* toShow);
+node2User * startDoubleList ();
+node2User * createDoubleNode (stUser value);
+node2User * addFirst (node2User* doubleList, node2User* newNode);
 node2User * searchLastUser(node2User * userList);
 node2User * addLast(node2User * userList, node2User * toAdd);
 node2User * insertUser(node2User * userList, node2User * toInsert);

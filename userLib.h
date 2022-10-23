@@ -19,7 +19,7 @@ typedef struct
     int matrixPass[2][5]; ///matriz que ingresa el usuario char convertido y almacenado en matriz de 2x2
     int birthYear;
     char gender;
-    char country[20];
+    char country[20];.1
     int songsPlayed[30]; ///IDs de canciones reproducidas por el user
     int totalSongsPlayed; ///valitwo de songsPlayed
     int off; ///flag 0 = activo. 1 = off
@@ -43,16 +43,16 @@ typedef struct
 //-                PARTE USUARIOS
 //-#################################################
 void addUserToFile();
-void showUserList();
 int nameValidation(char toCheck[]);
-int searchUserByName(node2Player * userList,char name[]);
 int totalUsers();
-int searchUserById(node2Player * userList, int idUser);
+int searchUserByName(char fullName[]);
+int searchUserById(int idUser);
 node2User * loadUsersFromFile(node2User * userList);
-void updateFile(node2Player * userList);
-void deleteUser(node2Player * userList,int idUser);
-void updateUser(node2Player,int subopciones);
+int updateFile(node2Player * userList);
+int deleteUser(int idUser);
+int updateUser(int idUser);
 stWord showPassword (stUser toShow);
+
 
 ///MATRICES
 void showMatrix (int row, int column, int matrix[row][column]);

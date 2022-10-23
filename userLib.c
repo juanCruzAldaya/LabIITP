@@ -3,7 +3,7 @@
 //-***************************************************************************************
 //SECTOR ADMINISTRACION DE userAuxS
 //-***************************************************************************************
-//A)FUNCION QUE CARGA 1 usuario A LA ESTRUCTURA AUXILIAR Y LA GUARDA EN EL fileUser
+//A)FUNCION QUE CARGA 1 userAux A LA ESTRUCTURA AUXILIAR Y LA GUARDA EN EL fileUser
 //-----------------------------------------------------
 
 
@@ -13,7 +13,7 @@ void addUserToFile()
     int valids = 0;
     FILE * userFile;
     stUser userAux;
-    int idUser = totalUsers(); ///funcion que trae cantidad de usuarios cargados en el archivo y autoinrementa 1
+    int idUser = totalUsers(); ///funcion que trae cantidad de userAuxs cargados en el fileUservo y autoinrementa 1
     int iterator = 0;
     int nameValidation = 0;
 
@@ -80,7 +80,7 @@ void addUserToFile()
         createKeyPass(2, keyPass);///crea matriz testigo
         copyMatrix(2,2, stUser.keyPass, keyPass); /// copia la matriz encriptadora del userAux en su campo del userAux
         encryptMatrix(2, 5, keyPass, decryptedPass, encryptedPass); ///encripta la contraseña
-        copyMatrix(2, 5, stUser.matrixPass, encryptedPass);///archiva la contrasenia encriptada en el campo pass de userAux
+        copyMatrix(2, 5, stUser.matrixPass, encryptedPass);///fileUserva la contrasenia encriptada en el campo pass de userAux
 
 
 
@@ -94,7 +94,7 @@ void addUserToFile()
         fflush(stdin);
         gets(&userAux.genero);
 
-        printf("Ingrese pais del usuario\n");
+        printf("Ingrese pais del userAux\n");
         fflush(stdin);
         gets(userAux.country);
 
@@ -109,96 +109,45 @@ void addUserToFile()
         }
 
         fwrite(&userAux,sizeof(stUser),1,fileUser);
-        printf("Se ha registrado correctamente el usuario\n");
+        printf("Se ha registrado correctamente el userAux\n");
         fclose(fileUser);
     }
 }
 
 
 //-----------------------------------------------------
-//A.1)FUNCION QUE VALIDA SI EL NOMBRE DEL USUARIO YA ESTA EN USO
+//A.1)FUNCION ADICIONAL QUE VALIDA SI EL USER EXISTE
 //-----------------------------------------------------
 
 
 int nameValidation(char toCheck[])
 {
-    FILE * userFile;
-    int flag = -1;
-    node2User * auxList;
-    int i = 0;
-    fileUser = fopen(USERSFILEPATH,"rb");
-    if (userFile)
-    {
-        auxList = loadUsersFromFile(auxList);
-        while ((flag!=0) && auxList);
-        {
-            flag = strcmp(auxList->value.fullName, toCheck);
-            auxList = auxList->next;
-        }
-        fclose(fileUser);
-    }
+    int flag = 0;
+    flag = searchUserByName(toCheck);
     return flag;
 }
 
 //-----------------------------------------------------
-//B)FUNCION QUE MUESTRA LISTA DE USUARIOS
+//FUNCION BAJA DE userAuxS (INACTIVIDAD) REGISTRADOS EN EL fileUser /
 //-----------------------------------------------------
 
-
-void showUserList()
+int deleteUser(int idUser)  /// Si el userAux fue elimiinado con exito devuelve 1, en caso de error devuelve 0;
 {
-    node2User * auxList = NULL;
-    auxList = loadUsersFromFile(auxList);
-    if (auxList)
+    FILE * userFIle = fopen(USERSFILEPATH,"r+b");
+    int pos = 0, flag = 0;
+    stUser userAux;
+    if(userFIle)
     {
-        showList();
+        pos = searchUserById(idUser); ///busco la pos del user en el archivo por id.
+        fseek(fileUser,pos*sizeof(stUser),0);///busco en el archivo
+        fread(&userAux,sizeof(stUser),1,fileUser); ///escribo en el aux de persona
+        userAux.eliminado = 1;
+        flag = 1;
     }
-    else
-    {
-        printf("La lista está vacía \n");
-    }
+    fclose(userFIle);
+    return flag;
 }
 
-//-----------------------------------------------------
-//C)FUNCION BAJA DE userAuxS (INACTIVIDAD) REGISTRADOS EN EL fileUser
-//-----------------------------------------------------
-
-
-void BajauserAux(node2User * userList, int idUser)
-{
-    char respuesta='y';
-    system("pause");
-    system("cls");
-    printf("Nombre del userAux %s:\n",userAux[pos].nombreuserAux);
-    printf("Esta seguro que quiere eliminar el userAux ID: %d ? Y/N \n",userAux[pos].IduserAux);
-    fflush(stdin);
-    gets(&respuesta);
-    while ((respuesta!='y')&&(respuesta!='n'))
-    {
-        system("cls");
-        printf("Opcion incorrecta!!\n");
-        printf("Por favor reingrese la opcion!\n");
-        printf("Nombre del userAux %s:\n",userAux[pos].nombreuserAux);
-        printf("Esta seguro que quiere eliminar el userAux ID: %d ? Y/N \n",userAux[pos].IduserAux);
-        fflush(stdin);
-        gets(&respuesta);
-    }
-    if (respuesta=='y')
-    {
-        userAux[pos].eliminado=1;
-        mostrarunuserAux(userAux,pos);
-        ActualizarfileUser(USERSFILEPATH,userAux,validos);
-        printf("userAux Inactivo!\n");
-    }
-    if (respuesta=='n')
-    {
-        userAux[pos].eliminado=0;
-        mostrarunuserAux(userAux,pos);
-        ActualizarfileUser(USERSFILEPATH,userAux,validos);
-        printf("No se dio de baja el userAux!\n");
-    }
-
-}
 
 
 //--------------------------------------------------
@@ -206,17 +155,21 @@ void BajauserAux(node2User * userList, int idUser)
 //--------------------------------------------------
 //D.1)FUNCION ADICIONAL PASAR LOS userAuxS GUARDADOS DEL fileUser A UNA ESTRUCTURA
 //----------------------------------------------------------------------------
+
 node2User * loadUsersFromFile(node2User * userList)
 {
     FILE *fileUser;
+    node2User * auxNode;
     stUser aux;
-    fileUser=fopen(USERSFILEPATH,"rb");
+    fileUser = fopen(USERSFILEPATH,"rb");
 
     if (fileUser)
     {
         node2User * seg = userList;
-        while ((fread(&aux,sizeof(stUser),1,fileUser)>0) && (seg))
+        while ((fread(&aux,sizeof(stUser),1,fileUser)>0))
         {
+            auxNode = createNode(aux);
+            addLast(seg, auxNode);
             seg = seg->next;
         }
         fclose(fileUser);
@@ -228,64 +181,73 @@ node2User * loadUsersFromFile(node2User * userList)
 
     return userList;
 }
-//-----------------------------------
-//D.2)FUNCION QUE BUSCAR userAux POR ID
-//-----------------------------------
-int BuscaruserAuxxxID(stuserAux userAuxs[],int id,int validos)
+void showUsers (node2User * userList)
 {
-    int posid=0;
-    int flag=0;
-    int i=0;
-    while ((i<validos)&&(flag==0))
-    {
-        if (id==userAuxs[i].IduserAux)
-        {
-            flag=1;
-            posid=i;
-        }
-        i++;
-    }
-    if (flag==0)//EN CASO QUE NO EXISTA EL userAux SE RETORNA -1 COMO VALOR
-    {
-        printf("El userAux no se encuentra en el registro!\n");
-        posid=-1;
-    }
-    if (flag!=0)//EN CASO QUE SE ENCONTRO EL userAux RETORNA SU POSICION
-    {
-        printf("El userAux se encuentra en el registro!\n");
-    }
-    return posid;
+    userList = loadUsersFromFile(userList);
+    showUserList(userList);
 }
-//-----------------------------------------------
-//D.3)BUSQUEDA DE userAux POR NOMBRE
-//-----------------------------------------------
-int BuscaruserAuxxNombre(stuserAux userAux[],int validos,char nombre[])
+
+//-----------------------------------
+//D.2)FUNCION QUE BUSCA USER POR ID
+//-----------------------------------
+int searchUserById(int idUser)
 {
-    int flag=0;
-    int i=0;
-    int comparacion=0;
-    int pos=0;
-    while ((i<validos)&&(flag==0))
+    FILE * fileUser = fopen(USERSFILEPATH, "rb");
+    int pos = 0, iterator = 0, flag = 0;
+    stUser userAux;
+    if(fileUser)
     {
-        comparacion=strcmpi(nombre,userAux[i].nombreuserAux);//COMPARO NOMBRES DE LOS REGISTRADOS CON EL BUSCADO
-        if (comparacion==0)//SI SE ENCUENTRA SE TERMINA EL CICLO
+        while(!feof(fileUser) && flag == 0)
         {
-            flag=1;//VALOR QUE CORTA EL CICLO
-            pos=i;
+            fread(&userAux,sizeof(stUser),1,fileUser);
+            if(!feof(fileUser))
+            {
+                if(idUser == stUser.idUser)
+                {
+                    pos = iterator;
+                    flag = 1;
+                }
+                else
+                {
+                    iterator++;
+                }
+            }
         }
-        i++;
     }
-    if (flag==0)//EN CASO QUE NO EXISTA EL userAux SE RETORNA -1 COMO VALOR
-    {
-        printf("El userAux no se encuentra en el registro!\n");
-        pos=-1;
-    }
-    if (flag!=0)//EN CASO QUE SE ENCONTRO EL userAux RETORNA SU POSICION
-    {
-        printf("El userAux se encuentra en el registro!\n");
-    }
+    fclose(fileUser);
     return pos;
 }
+
+int searchUserByName(char fullName[])
+{
+    FILE * fileUser = fopen(nombrefileUser, "rb");
+    int pos = 0, iterator = 0, flag = 0;
+    stUser userAux;
+    if(fileUser)
+    {
+        while(!feof(fileUser) && flag == 0)
+        {
+            fread(&fileUser,sizeof(stUser),1,fileUser);
+
+            if(!feof(fileUser))
+            {
+                if(strcmpi(userAux.fullName,fullName) == 0)
+                {
+                    pos = iterator;
+                    flag = 1;
+                }
+                else
+                {
+                    iterator++;
+                }
+            }
+        }
+    }
+    fclose(fileUser);
+    return pos;
+}
+
+//-----------------------------------------------
 //------------------------------------------------
 //D.4)FUNCION QUE RETORNA LA  CANTIDAD DE REGISTROS VALIDOS EN EL fileUser
 //------------------------------------------------
@@ -311,172 +273,119 @@ int totalUsers (char userFile[])
 }
 //-***************************************************************************************
 //FUNCION DE ACTUALIZACION DE userAuxS
-//-------------------------------------------
-void ActualizarfileUser(USERSFILEPATH,stuserAux userAux[],int validos)
+//------------------------------------------
+void updateFile(node2User * userList)
 {
     int i=0;
-    FILE *fileUser;
-    fileUser=fopen(USERSFILEPATH,"wb");
-    if (fileUser!=NULL)
+    FILE * fileUser;
+    fileUser = fopen(USERSFILEPATH,"wb");
+    if (fileUser)
     {
-        while(i<validos)
+        while(userList)
         {
-            fwrite(&userAux[i],sizeof(stuserAux),1,fileUser);
-            i++;
+            fwrite(&userList->value,sizeof(stUser),1,fileUser);
+            userList = userList->next;
         }
         fclose(fileUser);
     }
-    if (fileUser==NULL)
-    {
-        printf("Error en abrir el fileUser\n");
-    }
 }
+
 //---------------------------------------
 //FUNCION QUE MODIFICA UN userAux
 //----------------------------------------
-void modificacionuserAux(stuserAux userAux[],int pos,int subopciones)
+
+
+
+void updateUser(int idUser)
 {
-    char passaux[11];
-    int eliminado=0;
-    switch (subopciones)
+    FILE * fileUser = fopen(USERSFILEPATH,"r+b");
+    stUser userAux;
+    int keyPass[2][2];
+    int decryptedMatrix[2][5];
+    int encryptedMatrix[2][5];
+    char passAux[15];
+    int fieldOption = 0;
+    char newName[20];
+    int posInFile = searchUserById(fileUser,idUser);
+
+    if(fileUser)
     {
-    case 1:
-        printf("Su nombre actual: %s\n",userAux[pos].nombreuserAux);
-        printf("Ingrese nombre nuevo\n");
-        fflush(stdin);
-        gets(userAux[pos].nombreuserAux);
-        printf("Nombre Cambiado!\n");
-        printf("Su nombre nuevo es: %s\n",userAux[pos].nombreuserAux);
-        system("pause");
-        system("cls");
-        break;
+        fseek(fileUser,posInFile*sizeof(stUser),0);
+        fread(&userAux,sizeof(stUser),1,fileUser);
 
-    case 2:
-        printf("Ingrese Nueva contrasenia\n");
-        break;
-
-    case 3:
-        printf("Su Anio nacimiento actual es: %d\n",userAux[pos].birthYear);
-        printf("Ingrese anio de nacimiento\n");
-        scanf("%d",&userAux[pos].birthYear);
-        break;
-
-    case 4:
-        printf("Ingrese genero:\n");
-        printf("M:Masculino\n");
-        printf("F:Femenino\n");
-        fflush(stdin);
-        gets(&userAux[pos].genero);
-        while ((userAux[pos].genero!='f')&&(userAux[pos].genero!='m'))
+        if(idUser == userArux.idUser)
         {
-            printf("Genero incorrecto reingrese genero\n");
-            printf("M:Masculino\n");
-            printf("F:Femenino\n");
-            fflush(stdin);
-            gets(&userAux[pos].genero);
-        }
+            do
+            {
+                printf("\n1.Nombre de usuario: %s",userAux.idUser);
+                printf("\n2.Pass: %s", showPassword(userAux));
+                printf("\n3.Nacimiento: %d",userAux.anioNacimiento);
+                printf("\n4.Genero: %c",userAux.genero);
+                printf("\n5.Pais: %s",userAux.pais);
 
-        if (userAux[pos].genero=='f')
-        {
-            printf("Genero modificado a Femenino\n");
-        }
-        if (userAux[pos].genero=='m')
-        {
-            printf("Genero modificado a Masculino\n");
-        }
-        break;
 
-    case 5:
-        printf("country viejo %s\n",userAux[pos].country);
-        printf("country a modificar: %s\n",userAux[pos].country);
-        printf("Ingrese country de origen\n");
-        fflush(stdin);
-        gets(userAux[pos].country);
-        printf("country Nuevo %s\n",userAux[pos].country);
-        break;
+                printf("\n\nEscriba el numero del campo que desea modificar o 6 para salir :");
+                scanf("%d",&fieldOption);
 
-    case 6:
-        printf("Cantidad de peliculas vistas a modificar :%d\n",userAux[pos].canVistas);
-        printf("Ingrese cantidad de peliculas vistas\n");
-        scanf("%d",&userAux[pos].canVistas);
-        printf("Cantidad de peliculas vistas Modificadas :%d\n",userAux[pos].canVistas);
-        break;
+                switch(fieldOption)
+                {
+                case 1:
+                    printf("Ingrese nuevo nombre: ");
+                    fflush(stdin);
+                    gets(newName);
+                    if(nameValidation(newName) == 0)
+                    {
+                        strcpy(userAux.nombreuserAux,nuevouserAux);
 
-    case 7:
-        if (userAux[pos].eliminado==1)
-        {
-            printf("Estado actual del userAux es: INACTiVO\n");
-        }
-        if (userAux[pos].eliminado==0)
-        {
-            printf("Estado actual del userAux es: ACTIVO\n");
-        }
-        printf("Dar de alta/baja userAux\n");
-        scanf("%d",&eliminado);
-        while ((eliminado!=0)&&(eliminado!=1))
-        {
-            printf("Numero incorrecto\n");
-            printf("Reingrese opcion\n");
-            printf("0-Alta de userAux\n");
-            printf("1-Baja de userAux\n");
-            scanf("%d",&eliminado);
-        }
-        if (eliminado==0)
-        {
-            userAux[pos].eliminado=eliminado;
-            printf("Estado Modificado a ACTIVO\n");
-        }
-        if (eliminado==1)
-        {
-            userAux[pos].eliminado=eliminado;
-            printf("Estado Modificado a INACTIVO\n");
-        }
-        break;
+                    }
+                    else
+                    {
+                        printf("\nEl nombre elegido ya esta en uso.");
+                    }
+                    break;
 
-    default:
-        system("cls");
-        printf("Opcion incorrecta!\n");
-        printf("Reingrese nuevamente la opcion!!\n");
-        submenuModificacion();
-        scanf("%d",&subopciones);
-        break;
+                case 2:
+                    printf("\nIngrese Pass: ");
+                    fflush(stdin);
+                    gets(passAux);
+                    createMatrixPass(2, 5, passAux, decryptedMatrix);
+                    encryptMatrix(2, 5, userAux.keyPass, decryptedMatrix, encryptedMatrix);
+                    copyMatrix(2, 5, stUser.matrixPass, encryptedPass);
+                    break;
+                case 3:
+                    printf("\nIngrese anio de nacimiento:");
+                    scanf("%d",&userAux.birthYear);
+                    break;
+                case 4:
+                    printf("\nIngrese genero:");
+                    fflush(stdin);
+                    scanf("%c",&userAux.gender);
+                    break;
 
+                case 5:
+                    printf("\nIngrese pais:");
+                    fflush(stdin);
+                    gets(userAux.country);
+                    break;
+                }
+
+            }
+            while(fieldOption != 6);
+            fseek(fileUser,posInFile*sizeof(stUser),0);
+            fwrite(&userAux,sizeof(stUser),1,fileUser);
+            fclose(fileUser);
+        }
+        else
+        {
+            printf("El usuario no existe \n");
+        }
     }
 }
-///FUNCION DE PRINTEO DE LA MODIFICACION DE UN userAux
-void submenuModificacion()
-{
-    {
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",201,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,187);
-        printf("%c          MODIFICAR:          %c\n",186,186);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",200,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,205,188);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",201,205,187,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,191);
-        printf("%c1%c  NOMBRE                    %c\n",186,186,179);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",200,205,188,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,217);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",201,205,187,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,191);
-        printf("%c2%c  CONTRASEÑA                %c\n",186,186,179);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",200,205,188,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,217);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",201,205,187,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,191);
-        printf("%c3%c  A%CO DE NACIOMIENTO        %c\n",186,186,165,179);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",200,205,188,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,217);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",201,205,187,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,191);
-        printf("%c4%c  GENERO                    %c\n",186,186,179);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",200,205,188,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,217);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",201,205,187,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,191);
-        printf("%c5%c  country DE ORIGEN            %c\n",186,186,179);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",200,205,188,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,217);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",201,205,187,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,191);
-        printf("%c6%c  CANTIDAD PELICULAS VISTAS %c\n",186,186,179);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",200,205,188,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,217);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",201,205,187,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,191);
-        printf("%c7%c  DAR DE BAJA / ALTA        %c\n",186,186,179);
-        printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",200,205,188,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,196,217);
-    }
-}
+--
 ///FUNCION QUE CARGA LOS ID DE PELICULAS EN UN userAux DETERMINADO
 void cargaIDpelisauserAux(stuserAux userAux[],int pos,int pospeli)
 {
-    int i=0;
+    int i = 0;
     int flag=0;
     while ((i<30)&&(flag==0))
     {
@@ -605,7 +514,6 @@ void invertMatrix() (int two,int keyPass[two][two])
     keyPass[0][1] = -1*(p01)/determinant;
     keyPass[1][0] = -1*(keyPass[1][0])/determinant;
     keyPass[1][1] = (p00)/determinant;
-
 }
 
 int int checkCompatibility (int two, int five, int matrixPass[two][five], int keyPass[two][two], char toCheckPass[])
@@ -616,6 +524,7 @@ int int checkCompatibility (int two, int five, int matrixPass[two][five], int ke
     int flag = 0;
     int toCheckMatrix [2][5];
     int decryptedMatrix[2][5];
+
     createMatrixPass(2, 5, toCheckPass, toCheckMatrix);
     ///crea la matriz de la contrasenia ingresada
     decryptMatrix(2, 5, keyPass, matrixPass, decryptedMatrix);
@@ -636,7 +545,6 @@ int int checkCompatibility (int two, int five, int matrixPass[two][five], int ke
 }
 
 void copyMatrix (int rows, int columns, int copy[rows][columns], int original [rows][columns])
-
 {
     int j, k;
     for (j=0; j<rows; j++)
@@ -645,7 +553,6 @@ void copyMatrix (int rows, int columns, int copy[rows][columns], int original [r
         {
             copy[j][k]=original[j][k];
         }
-
     }
 }
 

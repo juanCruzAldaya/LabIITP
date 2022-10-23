@@ -28,14 +28,6 @@ node2User* addFirst(node2User* userList, node2User* newOne)
 }
 
 
-void showList(node2User * toShow) ///recursiva
-{
-    if (toShow)
-    {
-        showUserNode(toShow->user);
-        showUserList(toShow->next);
-    }
-}
 
 
 node2User * searchLastUser(node2User * userList) ///retorna el ultimo usuario, de manera recursiva
@@ -165,7 +157,7 @@ node2User * deleteFirst (node2User * userList)
 }
 
 
-void showNode(node2User * toShow)
+void showUserNode(node2User * toShow)
 {
     puts("-------------------------------------------------------------------\n");
     printf("ID USUARIO: %d\n",toShow->value.idUser);
@@ -195,3 +187,13 @@ void showNode(node2User * toShow)
     }
     puts("-------------------------------------------------------------------\n");
 }
+
+void showUserList(node2User * toShow) ///recursiva
+{
+    if (toShow)
+    {
+        showUserNode(toShow->user);
+        showUserList(toShow->next);
+    }
+}
+
