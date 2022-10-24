@@ -38,7 +38,7 @@ typedef struct
 void showUserNode(node2User * toShow);
 void showUserList(node2User* toShow);
 node2User * startDoubleList ();
-node2User * createDoubleNode (stUser value);
+node2User * createUserNode (stUser value);
 node2User * addFirst (node2User* doubleList, node2User* newNode);
 node2User * searchLastUser(node2User * userList);
 node2User * addLast(node2User * userList, node2User * toAdd);

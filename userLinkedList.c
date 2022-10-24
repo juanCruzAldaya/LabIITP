@@ -6,7 +6,7 @@ node2User* startLinkedList()
     return NULL;
 }
 
-node2User* createNode (stUser user)
+node2User* createUserNode (stUser user)
 {
     node2User* aux = (node2User*) malloc(sizeof(node2User));
     aux->user = user;

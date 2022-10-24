@@ -204,15 +204,15 @@ node2User * loadUsersFromFile(node2User * userList)
 {
     FILE * userFile;
     node2User * auxNode;
-    stUser aux;
+    stUser userAux;
     userFile = fopen(USERSFILEPATH,"rb");
 
     if (userFile)
     {
         node2User * seg = userList;
-        while ((fread(&aux,sizeof(stUser),1,userFile)>0))
+        while ((fread(&userAux,sizeof(stUser),1,userFile)>0))
         {
-            auxNode = createNode(aux);
+            auxNode = createUserNode(userAux);
             addLast(seg, auxNode);
             seg = seg->next;
         }
@@ -236,8 +236,9 @@ void showUsers (node2User * userList)
 //-----------------------------------
 int searchUserById(int idUser)
 {
-    FILE * userFile = fopen(USERSFILEPATH, "rb");
-    int pos = 0, iterator = 0, flag = 0;
+    FILE * userFile;
+    userFile = fopen(USERSFILEPATH, "rb");
+    int iterator = 0, flag = 0;
     stUser userAux;
     if(userFile)
     {
