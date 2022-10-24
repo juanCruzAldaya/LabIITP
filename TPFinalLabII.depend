@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1666554509 source:c:\users\juanc\onedrive - utn frmdp\escritorio\tpfinallabii\main.c
+	<stdio.h>
+	<stdlib.h>
+	<conio.h>
+	<string.h>
+	<time.h>
+

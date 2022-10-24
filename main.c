@@ -4,45 +4,6 @@
 #include <string.h>
 #include <time.h>
 
-typedef struct
-{
-    int idCancion;
-    char titulo[30];
-    char artista[20];
-    int duracion;
-    char album[20];
-    int anio;
-    char genero[20];
-    char comentario[100];
-    int eliminado; // indica 1 o 0 si la canción fue eliminada
-} stCancion;
-
-
-
-
-
-
-
- typedef struct
-{
-    int idSong;
-    char title[30];
-    char artist[20];
-    int duration;
-    char album[20];
-    int year;
-    char gender[20];
-    char comments[100];
-    int off; // indica 1 o 0 si la canción fue eliminada
-} stSong;
-
-typedef struct
-{
-    stSong value;
-    struct songListNode * next;
-} songListNode;
-
-
 
 
 typedef struct
@@ -51,9 +12,6 @@ typedef struct
  int idUsuario;
  int idCancion;
 } stPlaylist;
-
-
-
 
 
 

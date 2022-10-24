@@ -34,9 +34,18 @@
 		<Unit filename="ADLUsers.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="ADLUsers.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="songLib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="songLib.h" />
+		<Unit filename="songLinkedList.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="songLinkedList.h" />
 		<Unit filename="userLib.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -45,6 +54,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="userLinkedList.h" />
+		<Unit filename="userPlayLists.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="userPlayLists.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

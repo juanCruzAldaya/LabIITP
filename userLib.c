@@ -9,9 +9,24 @@
 
 void addUserToFile()
 {
-
-    int valids = 0;
     FILE * userFile;
+    stUser userAux;
+    userFile = fopen(USERSFILEPATH, "ab");
+    if (!userFile)
+    {
+        printf("Error en crear el fileUser / ruta invalida \n");
+    }
+    else
+    {
+        userAux = createOneUser();
+        fwrite(&userAux,sizeof(stUser),1,fileUser);
+        printf("Se ha registrado correctamente el userAux\n");
+        fclose(fileUser);
+    }
+}
+
+stUser createOneUser ()
+{
     stUser userAux;
     int idUser = totalUsers(); ///funcion que trae cantidad de userAuxs cargados en el fileUservo y autoinrementa 1
     int iterator = 0;
@@ -22,96 +37,83 @@ void addUserToFile()
     int decryptedPass[2][5]; ///cambia la contraseña q ingresa el userAux a una matriz de enteros
     int keyPass[2][2]; ///matriz encriptadora
     int encryptedPass[2][5]; ///matriz Encriptada
+    userAux.idUser = cont++; //AUTOINCREMENTABLE
 
-
-
-
-    userFile = fopen(USERSFILEPATH, "ab");
-    if (!userFile)
+    //CARGA DE 1 userAux POR TECLADO
+    printf("Ingrese el nombre comnpleto del USER (maximo 30 caracteres)\n");
+    fflush(stdin);
+    gets(userAux.fullName);
+    // VALIDO SI EL NOMBRE DE userAux YA EXISTE
+    nameValidation = nameValidation(userAux.fullName);
+    while (nameValidation == 0)
     {
-        printf("Error en crear el fileUser / ruta invalida \n");
-    }
-    else
-    {
-        userAux.idUser = cont++; //AUTOINCREMENTABLE
-
-        //CARGA DE 1 userAux POR TECLADO
-        printf("Ingrese el nombre comnpleto del USER (maximo 30 caracteres)\n");
+        printf("El nombre ya existe\n");
+        printf("Ingrese otro\n");
         fflush(stdin);
         gets(userAux.fullName);
-        // VALIDO SI EL NOMBRE DE userAux YA EXISTE
-        nameValidation = nameValidation(userAux.fullName);
-        while (nameValidation == 0)
-        {
-            printf("El nombre ya existe\n");
-            printf("Ingrese otro\n");
-            fflush(stdin);
-            gets(userAux.fullName);
-            nameValidation = nameValidation(userAux.fullName);//VALIDO NUEVAMENTE EL NOMBRE
-        }
-
-        do
-        {
-            system("cls");
-            printf("Ingrese una contrasenia (10 caracteres obligatoriamente):\n");
-            gotoxy(30, 21);
-            fflush(stdin);
-            gets(passAux);
-            getch();
-            gotoxy(30, 22);
-            printf("Una vez mas por favor :) \n");
-            gotoxy(30, 23);
-            fflush(stdin);
-            gets(passAux1);
-            getch();
-        }
-        while(strcmpi(passAux,passAux1) != 0);
-        while(strlen(passAux) != (10 * sizeof(char)))
-        {
-            system("cls");
-            gotoxy(30, 20);
-            printf("Recuerde la contrasenia debe tener 10 caracteres, ingrese otra por favor:\n");
-            gotoxy(30, 21);
-            gets(passAux);
-            getch();
-        }
-
-        createMatrixPass(2, 5, passAux, decryptedPass);///pasa pswd a matriz de enteros
-        createKeyPass(2, keyPass);///crea matriz testigo
-        copyMatrix(2,2, stUser.keyPass, keyPass); /// copia la matriz encriptadora del userAux en su campo del userAux
-        encryptMatrix(2, 5, keyPass, decryptedPass, encryptedPass); ///encripta la contraseña
-        copyMatrix(2, 5, stUser.matrixPass, encryptedPass);///fileUserva la contrasenia encriptada en el campo pass de userAux
-
-
-
-        printf("Ingrese anio de nacimiento\n");
-        scanf("%d",&userAux.birthYear);
-
-        printf("Ingrese Genero\n");
-        printf("M: Masculino\n");
-        printf("F: Femenino\n");
-        printf("X: Otro")
-        fflush(stdin);
-        gets(&userAux.genero);
-
-        printf("Ingrese pais del userAux\n");
-        fflush(stdin);
-        gets(userAux.country);
-
-        userAux.off = 0;
-
-        userAux.songsPlayed = 0;
-
-        while (iterator<30)
-        {
-            userAux.songsPlayed[iterator] = -1;
-            iterator++;
-        }
-
-        fwrite(&userAux,sizeof(stUser),1,fileUser);
-        printf("Se ha registrado correctamente el userAux\n");
-        fclose(fileUser);
+        nameValidation = nameValidation(userAux.fullName);//VALIDO NUEVAMENTE EL NOMBRE
     }
+
+    do
+    {
+        system("cls");
+        printf("Ingrese una contrasenia (10 caracteres obligatoriamente):\n");
+        gotoxy(30, 21);
+        fflush(stdin);
+        gets(passAux);
+        getch();
+        gotoxy(30, 22);
+        printf("Una vez mas por favor :) \n");
+        gotoxy(30, 23);
+        fflush(stdin);
+        gets(passAux1);
+        getch();
+    }
+    while(strcmpi(passAux,passAux1) != 0);
+    while(strlen(passAux) != (10 * sizeof(char)))
+    {
+        system("cls");
+        gotoxy(30, 20);
+        printf("Recuerde la contrasenia debe tener 10 caracteres, ingrese otra por favor:\n");
+        gotoxy(30, 21);
+        gets(passAux);
+        getch();
+    }
+
+    createMatrixPass(2, 5, passAux, decryptedPass);///pasa pswd a matriz de enteros
+    createKeyPass(2, keyPass);///crea matriz testigo
+    copyMatrix(2,2, stUser.keyPass, keyPass); /// copia la matriz encriptadora del userAux en su campo del userAux
+    encryptMatrix(2, 5, keyPass, decryptedPass, encryptedPass); ///encripta la contraseña
+    copyMatrix(2, 5, stUser.matrixPass, encryptedPass);///fileUserva la contrasenia encriptada en el campo pass de userAux
+
+
+
+    printf("Ingrese anio de nacimiento\n");
+    scanf("%d",&userAux.birthYear);
+
+    printf("Ingrese Genero\n");
+    printf("M: Masculino\n");
+    printf("F: Femenino\n");
+    printf("X: Otro")
+    fflush(stdin);
+    gets(&userAux.genero);
+
+    printf("Ingrese pais del userAux\n");
+    fflush(stdin);
+    gets(userAux.country);
+
+    userAux.off = 0;
+
+    userAux.songsPlayed = 0;
+
+    while (iterator<30)
+    {
+        userAux.songsPlayed[iterator] = -1;
+        iterator++;
+    }
+
+}
+return userAux;
 }
 
 
@@ -155,7 +157,7 @@ int deleteUser(int idUser)  /// Si el userAux fue elimiinado con exito devuelve 
 //-----------------------------------------------------
 
 
-void deleteUser(node2User * userList, int idUser)
+    void deleteUser(node2User * userList, int idUser)
 {
     char respuesta='y';
     system("pause");

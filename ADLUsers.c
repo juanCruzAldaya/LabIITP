@@ -1,23 +1,32 @@
-
-#include "TDAARREGLO.h"
-#include "usuarios.h"
-#include "listaEnlazada.h"
+#define USERSPLAYLISTS "UserPlayLists.bin"
+#include "ADLUsers.h"
 
 
 
-int pasarArchivotoArregloUsuario(arregloUsuarios adl[],char patch[],int dimension, nodoListaPelicula *lista)
+
+int loadListFromFile(stCell * userList)
 {
-    FILE * archivo;
-    int validos=0;
-    stUsuario usuario;
-    archivo=fopen(patch,"rb");
-    if(!archivo)
+    FILE * fileUser;
+    nodeSongList * auxSongList;
+    stUser userAux;
+    stCell * userList;
+    fileUser = fopen(USERSFILEPATH,"rb");
+    if(fileUser)
     {
-    while(!feof(archivo))
-    {
-        fread(&usuario,1,sizeof(stUsuario),archivo);
-        validos=altaUsuarioaArreglo(adl,usuario.IdUsuario,validos,lista, usuario);
-    }
+        while(!feof(fileUser))
+        {
+            fread(&userAux,1,sizeof(stUser),fileUser);
+
+            ///PARA BUSCAR CANCIONES X ID, ES MEJOR HACERLO MEDIANTE EL ARBOL AL SER MAS OPTIMO PARA ESO
+            ///UNA VEZ CON LA LIBRERIA DE ARBOL, AGREGAR QUE ACÁ A LA LISTA DE USER
+
+            ///MIENTRAS USERAUX->SONGPLAYED != 0
+            ///ALGORITMO DE BUSQUEDA DE CANCION X ID QUE DEVUELVA STSONG DEL ID ACTUAL -> Y ACA CREAR NODO SONG
+            ///SONG LIST = CARGA EL NODO EN LA LISTA
+            ///USERAUX->SONGPLAYED[i++];
+
+            userList = addUserToList(userList,auxSongList); ///ACA PASA LA LISTA CARGADA ARRIBA DE CANCIONES ESCUCHADAS X EL USER
+        }
     }
     else
     {
@@ -28,111 +37,62 @@ int pasarArchivotoArregloUsuario(arregloUsuarios adl[],char patch[],int dimensio
 }
 
 
-int agregarUsuario(arregloUsuarios adl[],stUsuario datos,int validos)
+stCell * createCellUser()
 {
-    adl[validos].usr.IdUsuario=datos.IdUsuario;
-    strcpy(adl[validos].usr.nombreUsuario, datos.nombreUsuario);
-    adl[validos].usr.pass[2][5]=datos.pass;
-    adl[validos].usr.anioNacimiento=datos.anioNacimiento;
-    strcpy(adl[validos].usr.genero, datos.genero);
-    strcpy(adl[validos].usr.pais, datos.pais);
-    adl[validos].usr.canVistas=datos.canVistas;
-    adl[validos].usr.eliminado=datos.eliminado;
-    adl[validos].listaPelis=inicLista();
-
-    validos++;
-    return validos;
+    stCell * userCellAux;
+    stUser userAux;
+    userAux = createOneUser();
+    userCellAux->userValue = userAux;
+    userCellAux->songList = startSongList();
+    userCellAux->next = NULL;
+    return userCellAux;
 }
 
-
-int altaUsuarioaArreglo(arregloUsuarios adl[],int idUsuario,int validos,nodoListaPelicula *lista, stUsuario datos)
+stCell * addUserToList(stCell * userList,nodeSongList * songList, stUser toAdd)
 {
-    nodoListaPelicula *aux=lista;
-    int pos=buscarxUsuario(adl,idUsuario,validos);
-    if(pos==-1)
+    stCell * userAux;
+    userAux = createCellNode(toAdd, songList);
+    if(userList)
     {
-        validos=agregarUsuario(adl,datos,validos);
-        pos=validos-1;
+        userList = addLast(userList,toAdd);
     }
-    adl[pos].listaPelis=agregarPpio(adl[pos].listaPelis,aux);
-    return validos;
+    auxUser->songList = songList;
+    return auxUser;
 }
 
-int buscarxUsuario(arregloUsuarios adl[], int idUsuario, int validos)
+stCell * searchUserById(stCell * userList, int idUser)
 {
-    int rta=-1;
-    int i=0;
-    while ((i<validos)&&(rta==-1))
+    stCell * userAux = NULL;
+    while (userList)
     {
-        if(adl[i].usr.IdUsuario == idUsuario)
-            rta=i;
-        i++;
+        if(userList->userValue.idUser == idUser)
+            userAux = userList;
+        userList = userList->next;
     }
-    return rta;
+    return userAux;
 }
 
 
-void mostrarUsuarios (arregloUsuarios adl[], int validos)
+void showUserPlaylists (stCell * userList)
 {
     printf("\nMostrando el ADL de usuarios \n");
-    int i=0;
-    while(i<validos)
+    if (userList)
     {
-        printf("\nUsuario ID %d: %s",adl[i].usr.IdUsuario,adl[i].usr.nombreUsuario);
-        printf("\nPeliculas vistas por el usuario: ");
-        recorrerYmostrar(adl[i].listaPelis);
-        i++;
+        showCellList(userList);
     }
+    else
+        printf("There is nothing to show\n");
 }
 
-int AgregarPeliculaToUsuario(arregloUsuarios adl[], char usuario[], char pelicula[], int validos, stPelicula p)
+stCell * addSongToUser(stCell * userList, int idUser, stSong toAdd)
 {
-    nodoListaPelicula * aux = crearNodo(p);
-    int pos = buscarxUsuario(adl,usuario,validos);
-    if(pos==-1)
+    nodeSongList * auxSong = createSongNode(toAdd);
+    stCell * auxUser;
+    auxUser = searchUserById(userList, idUser);
+    if(auxUser)
     {
-        ///validos=agregarUsuario(adl,,validos);
-        pos=validos-1;
+        auxUser->songList = addLast(auxUser->songList, auxSong);
     }
-    adl[pos].listaPelis=agregarFinal(adl[pos].listaPelis, aux);
-    return validos;
+    return userList;
 }
 
-nodoListaPelicula * limpiarArregloDeListas (nodoListaPelicula * lista)
-{
-    nodoListaPelicula * proximo;
-    nodoListaPelicula * seg;
-    seg = lista;
-    while(seg != NULL)
-    {
-        proximo = seg->sig;
-        free(seg);
-        seg = proximo;
-    }
-    return seg;
-}
-
-void persistirPeliculasVistas (char archivo[], arregloUsuarios adl[], int validos)
-{
-    FILE * arch=NULL;
-    arch=fopen(archivo, "wb");
-
-    int i=0;
-    nodoListaPelicula * seg = NULL;
-    arregloUsuarios aux;
-    if(arch!=NULL)
-    {
-        for(i=0;i<validos; i++)
-        {
-            //strcpy(aux.usr, adl[i].usr);
-            seg=adl[i].listaPelis;
-            while(seg!=NULL)
-            {
-                //
-                fwrite(&aux,sizeof(arregloUsuarios),1,arch);
-                seg=seg->sig;
-            }
-        }
-        fclose(arch);
-    }
-}

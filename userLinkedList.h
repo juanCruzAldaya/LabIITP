@@ -14,11 +14,7 @@ typedef struct
     int keyPass[2][2]; ///matriz testigo / encriptadora / unica de c/user
     int matrixPass[2][5]; ///matriz que ingresa el usuario char convertido y almacenado en matriz de 2x2
     int birthYear;
-<<<<<<< HEAD
-    char gender; //
-=======
     char gender;
->>>>>>> 844ac3901b9c0b05aae615d91c018ea561c70790
     char country[20];
     int songsPlayed[30]; ///IDs de canciones reproducidas por el user
     int totalSongsPlayed; ///valitwo de songsPlayed
