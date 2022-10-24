@@ -11,12 +11,12 @@ typedef struct
 
 stCell * inicList();
 stCell * createNodePlayList(stUser toCreate);
-stCell * addFirst(stCell * userList, stCell * toAdd);
-stCell * searchLastNode(stCell * songList);
-stCell * addLast(stCell * songList, stCell * toAdd);
-stCell * addInOrderByName(stCell * songList, nodeListSong * toAdd);
-
+stCell * addFirst(stCell * cellList, stCell * toAdd);
+stCell * searchLastNode(stCell * cellList);
+stCell * addLast(stCell * cellList, stCell * toAdd);
+stCell * addInOrderByName(stCell * cellList, nodeListSong * toAdd);
+stCell * deleteSongById(stCell * cellList, int idSong);
 void showCellNode(stCell * toShow);
 void showCellList(stCell * toShow);
 
-stCell * deleteSongById(stCell * songList, int idSong);
+

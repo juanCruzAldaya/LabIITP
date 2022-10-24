@@ -4,12 +4,11 @@
 
 
 
-int loadListFromFile(stCell * userList)
-{
-    FILE * fileUser;
-    nodeSongList * auxSongList;
-    stUser userAux;
-    stCell * userList;
+int loadListFromFile(stCell * userList) ///levanta el archivo de stPlaylist y trae CADA canción al usuario de CADA registro stPlaylist.
+{                                       ///recordar que el struct stPlaylist tiene 1 idSong y 1 idUser para relacionarlas.
+    FILE * fileUser;                    ///eso es lo que pide el enunciado.
+    nodeSongList * auxSongList;         ///PERO PERO PERO por qué no cargar la lista de canciones desde los idSong que almacena c/ user?
+    stUser userAux;    stCell * userList;
     fileUser = fopen(USERSFILEPATH,"rb");
     if(fileUser)
     {

@@ -28,9 +28,9 @@ stCell * addFirst(stCell * cellList, stCell * toAdd)
     return cellList;
 }
 
-stCell * searchLastCell(stCell * songList)
+stCell * searchLastCell(stCell * userList)
 {
-    stCell * cellAux = songList;
+    stCell * cellAux = userList;
     while (cellAux->next != NULL)
     {
         cellAux = cellAux->next;
@@ -38,38 +38,65 @@ stCell * searchLastCell(stCell * songList)
     return cellAux;
 }
 
-stCell * addLast(stCell * songList, stCell * toAdd)
+stCell * addLast(stCell * cellList, stCell * toAdd)
 {
     stCell * lastSong;
-    if (!songList)
+    if (!cellList)
     {
-        songList = toAdd;
+        cellList = toAdd;
     }
     else
     {
-        lastSong = searchLastSong(songList);
-        lastSong->next = toAdd;
+        lastSong = searchLastSong(cellList);
+        cellList->next = toAdd;
     }
-    return songList;
+    return cellList;
 }
 
-stCell * addInOrderBySongName(stCell *songList, stCell * toAdd)
+stCell * addInOrderBySongName(stCell *cellList, stCell * toAdd)
 {
-    if (!songList)
+    if (!cellList)
     {
-        songList = toAdd;
+        cellList = toAdd;
     }
     else
     {
-        if (strcmpi(toAdd->userValue.title, songList->userValue.title) < 0)
+        if (strcmpi(toAdd->userValue.title, cellList->userValue.title) < 0)
         {
-            songList = addFirst(songList, toAdd);
+            cellList = addFirst(cellList, toAdd);
         }
         else
         {
-            stCell * prev = songList;
-            stCell * cellAux = songList;
-            while (cellAux && (strcmpi(toAdd->userValue.title, songList->userValue.title) > 0))
+            stCell * prev = cellList;
+            stCell * cellAux = cellList;
+            while (cellAux && (strcmpi(toAdd->userValue.title, cellList->userValue.title) > 0))
+            {
+                prev = cellAux;
+                cellAux = cellAux->next;
+            }
+            prev->next = toAdd;
+            toAdd->next = cellAux;
+        }
+    }
+}
+
+stCell * addInOrderById(stCell *cellList, stCell * toAdd)
+{
+    if (!cellList)
+    {
+        cellList = toAdd;
+    }
+    else
+    {
+        if (toAdd->userValue.idUser < cellList->userValue.idUser)
+        {
+            cellList = addFirst(cellList, toAdd);
+        }
+        else
+        {
+            stCell * prev = cellList;
+            stCell * cellAux = cellList;
+            while (cellAux && (strcmpi(toAdd->userValue.title, cellList->userValue.title) > 0))
             {
                 prev = cellAux;
                 cellAux = cellAux->next;
@@ -118,26 +145,7 @@ void showCellList(stCell * toShow) ///recursiva
     if (toShow)
     {
         showCellNode(toShow->userValue);
+        showSongList(toShow->songList);
         showCellList(toShow->next);
     }
 }
-
-
-nodeSongList * deleteNodeByIdSong(stCell *songList, int ID)
-{
-    stCell *aux = inicsongList();
-    if (songList != NULL)
-    {
-        if (songList->userValue.idSong == ID)
-        {
-            stCell * deletedNode = songList;
-            songList = songList->next;
-            free(deletedNode);
-        }
-        else
-        {
-            songList->next = deleteNodeByIdSong(songList->next, ID);
-        }
-    }
-}
-
