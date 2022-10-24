@@ -17,3 +17,4 @@ void showNode(nodeListSong * toShow);
 void showSongList(nodeListSong * toShow)
 void showBackwardsRevursive(nodeListSong * iterator);
 nodeListSong * deleteSongById(nodeListSong * songList, int idSong);
+nodeListSong * deleteSongList (nodeListSong * toDelete);

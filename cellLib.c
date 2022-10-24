@@ -1,10 +1,9 @@
 #define USERSPLAYLISTS "UserPlayLists.bin"
-#include "ADLUsers.h"
+#include "cellLib.h"
 
 
 
-
-int loadListFromFile(stCell * userList) ///levanta el archivo de stPlaylist y trae CADA canción al usuario de CADA registro stPlaylist.
+stCell * loadListFromFile(stCell * userList) ///levanta el archivo de stPlaylist y trae CADA canción al usuario de CADA registro stPlaylist.
 {                                       ///recordar que el struct stPlaylist tiene 1 idSong y 1 idUser para relacionarlas.
     FILE * fileUser;                    ///eso es lo que pide el enunciado.
     nodeSongList * auxSongList;         ///PERO PERO PERO por qué no cargar la lista de canciones desde los idSong que almacena c/ user?
@@ -31,8 +30,7 @@ int loadListFromFile(stCell * userList) ///levanta el archivo de stPlaylist y tr
     {
         printf("error en abrir el archivo!\n");
     }
-    return validos;
-
+    return userList;
 }
 
 
@@ -47,7 +45,7 @@ stCell * createCellUser()
     return userCellAux;
 }
 
-stCell * addUserToList(stCell * userList,nodeSongList * songList, stUser toAdd)
+stCell * addUserToList(stCell * userList, nodeSongList * songList, stUser toAdd)
 {
     stCell * userAux;
     userAux = createCellNode(toAdd, songList);
@@ -58,6 +56,7 @@ stCell * addUserToList(stCell * userList,nodeSongList * songList, stUser toAdd)
     auxUser->songList = songList;
     return auxUser;
 }
+
 
 stCell * searchUserById(stCell * userList, int idUser)
 {
@@ -83,6 +82,9 @@ void showUserPlaylists (stCell * userList)
         printf("There is nothing to show\n");
 }
 
+
+
+
 stCell * addSongToUser(stCell * userList, int idUser, stSong toAdd)
 {
     nodeSongList * auxSong = createSongNode(toAdd);
@@ -95,3 +97,11 @@ stCell * addSongToUser(stCell * userList, int idUser, stSong toAdd)
     return userList;
 }
 
+stCell * clearSongList (stCell * cellList, int idUser)
+{
+    stCell * userAux;
+    userAux = searchUserById(cellList, idUser);
+    userAux->songList = deleteSongList(userAux->songList);
+
+    return cellList;
+}

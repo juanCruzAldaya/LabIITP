@@ -143,10 +143,10 @@ nodeListSong * deleteNodeById(nodeListSong * songList, int idSong)
 
 }
 
-nodeSongList * deleteSongList (nodeListSong * toDelete)
+nodeListSong * deleteSongList (nodeListSong * toDelete)
 {
-    nodeSongList * next;
-    nodeSongList * auxSong;
+    nodeListSong * next;
+    nodeListSong * auxSong;
     auxSong = toDelete;
     while(auxSong != NULL)
     {

@@ -31,10 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="ADLUsers.c">
+		<Unit filename="cellLib.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="ADLUsers.h" />
+		<Unit filename="cellLib.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
